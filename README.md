@@ -1,5 +1,8 @@
 # Verilog
 
+
+
+
 16:1 MUX
 ```
 module m161(out, S1, S2, S3, S4, D1, D2, D3, D4, D5, D6, D7, D8, D9, D10, D11, D12, D13, D14, D15, D16);
@@ -50,4 +53,31 @@ end else begin
 out <= out - 1;
 end
 endmodule 
+```
+
+Adder - Subtractor
+```
+module adder_subtractor(S, C, V, A, B, Op);
+output [3:0] S;
+output       C;
+output       V;
+input [3:0]  A;      
+input [3:0]  B;
+input        Op;
+
+wire	     X0, X1, X2, X3, W0, W1, W2, W3;
+
+xor(W0, B[0], Op);
+xor(W1, B[1], Op);
+xor(W2, B[2], Op);
+xor(W3, B[3], Op);
+xor(C, X3, Op);
+xor(V, X3, Op);
+
+Full_Adder f1( A[0], W0, Op, S[0], X0);
+Full_Adder f2( A[1], W1, Op, S[1], X1);
+Full_Adder f3( A[2], W2, Op, S[2], X2);
+Full_Adder f4( A[3], W3, Op, S[3], X3);
+
+endmodule
 ```
