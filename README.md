@@ -1,6 +1,6 @@
 # Verilog
 
-NOT Gate
+## NOT Gate
 ```
 module noot(y,a);
 	input a;
@@ -9,7 +9,7 @@ module noot(y,a);
 endmodule
 ```
 
-NOT Gate (Behavioral)
+## NOT Gate (Behavioral)
 ```
 module notb(y,ybar);
 	input y;
@@ -20,7 +20,7 @@ module notb(y,ybar);
 endmodule
 ```
 
-NOT Gate (LUT)
+## NOT Gate (LUT)
 ```
 primitive not_1(y,a);
 	input a;
@@ -32,7 +32,7 @@ primitive not_1(y,a);
 endprimitive 
 ```
 
-NOT Gate (Testbench)
+## NOT Gate (Testbench)
 ```
 module noot_tst_bch();
 	wire y;
@@ -45,7 +45,7 @@ module noot_tst_bch();
 endmodule 
 ```
 
-OR Gate
+## OR Gate
 ```
 module orr(y,a,b);
 	input a,b;
@@ -54,7 +54,7 @@ module orr(y,a,b);
 endmodule
 ```
 
-OR Gate Testbench
+## OR Gate Testbench
 ```
 module orr_tst_bch();
 	wire y;
@@ -73,14 +73,14 @@ module orr_tst_bch();
 endmodule
 ```
 
-AND Gate
+## AND Gate
 ```
 module andd(output y,input a,b);
 	assign y=a^b;
 endmodule
 ```
 
-NOR Gate
+## NOR Gate
 ```
 module norb(y,a,b);
 	input a,b;
@@ -91,7 +91,7 @@ module norb(y,a,b);
 endmodule
 ```
 
-4-bit XOR
+## 4-bit XOR
 ```
 module par(y,i);
 	input [3:0]i;
@@ -100,7 +100,7 @@ module par(y,i);
 	endmodule
 ```
 
-Half Adder
+## Half Adder
 ```
 module ha(sum,cout,a,b);
 	input a,b;
@@ -110,7 +110,7 @@ module ha(sum,cout,a,b);
 endmodule
 ```
 
-Half Adder
+## Half Adder
 ```
 module ha(sum,cout,a,b);
 	input a,b;
@@ -120,7 +120,7 @@ module ha(sum,cout,a,b);
 endmodule
 ```
 
-Half Adder (Using NAND)
+## Half Adder (Using NAND)
 ```
 module half_adder_nand(sum,cout,a,b);
 	input a,b;
@@ -135,7 +135,7 @@ module half_adder_nand(sum,cout,a,b);
 endmodule 
 ```
 
-Half Adder
+## Half Adder
 ```
 module hacata(sum,cout,a,b);
 	output wire sum,cout;
@@ -145,7 +145,7 @@ module hacata(sum,cout,a,b);
 endmodule
 ```
 
-Full Adder
+## Full Adder
 ```
 module fa2_1(sum,cout,a,b,cin);
 	input a,b,cin;
@@ -159,7 +159,7 @@ module fa2_1(sum,cout,a,b,cin);
 endmodule 
 ```
 
-Full Adder (Behavioral)
+## Full Adder (Behavioral)
 ```
 module fa1b(sum,cout,a,b,cin);
 	input a,b,cin;
@@ -175,7 +175,7 @@ module fa1b(sum,cout,a,b,cin);
 endmodule
 ```
 
-3-bit Full Adder (using half adder)
+## 3-bit Full Adder (using half adder)
 ```
 module fa_ha_3(output [2:0]sum,output cout,input [2:0]a,b,input cin);
 	wire [0:10]t;
@@ -191,7 +191,7 @@ module fa_ha_3(output [2:0]sum,output cout,input [2:0]a,b,input cin);
 endmodule
 ```
 
-3-bit Full Adder (Testbench)
+## 3-bit Full Adder (Testbench)
 ```
 module fa3_1tst();
 	reg clk,cin;
@@ -217,7 +217,7 @@ module fa3_1tst();
 endmodule
 ```
 
-8-bit Full Adder (using 2-bit Full Adder)
+## 8-bit Full Adder (using 2-bit Full Adder)
 ```
 module fa8_1(output [7:0]sum, output cout, input [7:0]a,b, input cin);
 	wire [0:6]temp;
@@ -232,20 +232,196 @@ module fa8_1(output [7:0]sum, output cout, input [7:0]a,b, input cin);
 endmodule 
 ```
 
+## 2:1 MUX
+```
+module mux2_1(y,s0,i0,i1);
+	input s0,i0,i1;
+	output y;
+	wire s0bar,t1,t2;
+	not (s0bar,s0);
+	and a1(t1,s0bar,i0);
+	and a2(t2,s0,i1);
+	or (y,t1,t2);
+endmodule
+```
+## 4:1 MUX (using case statement)
+```
+module mux4_1_case(y,s,i);
+	input [3:0]i;
+	input [1:0]s;
+	output reg y;
+	always @(s,i)
+	case (s)
+		2'b00 : y = i[0];
+		2'b01 : y = i[1];
+		2'b10 : y = i[2];
+		2'b11 : y = i[3];
+		
+	endcase
+endmodule 
+```
+
+## 8:1 MUX (using 2:1 MUX)
+```
+module mux8_1(output y,input [0:2]s,input [0:7]i);
+	wire [0:5]t;
+	mux2_1 a1(t[0],s[0],i[0],i[1]);
+	mux2_1 a2(t[1],s[0],i[2],i[3]);
+	mux2_1 a3(t[2],s[0],i[4],i[5]);
+	mux2_1 a4(t[3],s[0],i[6],i[7]);
+	mux2_1 a5(t[4],s[1],t[0],t[1]);
+	mux2_1 a6(t[5],s[1],t[2],t[3]);
+	mux2_1 a7(y,s[2],t[4],t[5]);
+endmodule 
+```
+
+## 8:1 MUX (Testbench)
+```
+module mux8_1tst();
+	reg clk;
+	reg [0:7]I;
+	reg [0:2]s;
+	integer count;
+	mux8_1 ab(y,s,I);
+	initial 
+		clk=1;
+	initial
+		count=0;
+	always 
+		#5 clk=~clk;
+	always @(posedge clk)
+	begin
+		count=count+1;
+	end
+	always @(posedge clk)
+	begin
+		{s,I}=count;
+	end
+endmodule
+```
+
+## Gray to Binary converter
+```
+module g2b(output [3:0]b,input [3:0]g);
+	assign b[3] = g[3];
+	xor a1(b[2],g[2],g[3]);
+	xor a2(b[1],g[1],b[2]);
+	xor a3(b[0],g[0],b[1]);
+endmodule
+```
+
+## Gray to Binary converter(Testbench)
+```
+module tstbch();
+	wire [3:0]b;
+	reg [3:0]g;
+	reg clk;
+	integer count ;
+	gray2binary a(b,g);
+	initial
+		clk = 1;
+	initial 
+		count = 0;
+	always 
+		#10 clk = ~clk;
+	always @(posedge clk)
+	begin
+		count = count + 1;
+	end
+	always @(posedge clk)
+	begin
+		{g} = count;
+	end
+endmodule
+```
+
+## BCD to 7 segement convereter
+```
+module seven(y,i);
+	output reg [0:6]y;
+	input [3:0]i;
+	always @(i)
+	case (i)
+		4'b0000 : y = 7'b1111110;
+		4'b0001 : y = 7'b0110000;
+		4'b0010 : y = 7'b1101101;
+		4'b0011 : y = 7'b1111001;
+		4'b0100 : y = 7'b0110011;
+		4'b0101 : y = 7'b1011011;
+		4'b0110 : y = 7'b1011111;
+		4'b0111 : y = 7'b1110000;
+		4'b1000 : y = 7'b1111111;
+		4'b1001 : y = 7'b1111101;
+		default : y = 7'b0000000;
+	endcase
+endmodule 
+```
+
+## Priority Encoder
+```
+module pe4_1(y,i);
+	input [0:3]i;
+	output reg [0:1]y;
+	always @(i)
+	casez (i)
+	 4'b1??? : y = 2'b11;
+	 4'b01?? : y = 2'b10;
+	 4'b001? : y = 2'b01;
+	 4'b0001 : y = 2'b00;
+	endcase
+endmodule
+```
+
+## 8:3 Priority Encoder
+```
+module prio_enco(i,y);
+	input [7:0]i;
+	output reg [2:0]y;
+	always @(i)
+	if ( i[7] == 1'b1)
+		y = 1;
+	else if ( i[6] == 1'b1)
+		y = 2;
+	else if ( i[5] == 1'b1)
+		y = 3;
+	else if ( i[4] == 1'b1)
+		y = 4;
+	else if ( i[3] == 1'b1)
+		y = 5;
+	else if ( i[2] == 1'b1)
+		y = 6;
+	else if ( i[1] == 1'b1)
+		y = 7;
+	else if ( i[0] == 1'b1)
+		y = 0;
+endmodule
+```
+
+## Parity generator
+```
+module par_gen(y,i);
+	input [7:0]i;
+	output reg y;
+	integer k;
+	always @(i)
+	begin
+		y = i[0] ^ i[1]; 
+	for (k=2 ; k<7; k= k+1)
+		y = y ^ i[k] ;
+	end
+endmodule
+```
+## 
+## 
+## 
+## 
+## 
+## 
+## 
+## 
 
 
-
-
-
-
-
-
-
-
-
-
-
-16:1 MUX
+## 16:1 MUX
 ```
 module m161(out, S1, S2, S3, S4, D1, D2, D3, D4, D5, D6, D7, D8, D9, D10, D11, D12, D13, D14, D15, D16);
 input S1, S2, S3, S4;
@@ -258,7 +434,7 @@ m21 g3(y1, y2, S4, out);
 endmodule 
 ```
 
-3:8 Decoder
+## 3:8 Decoder
 ```
 module d38(in, out);
 input [2:0]in;
@@ -279,7 +455,7 @@ endmodule
 ```
 
 
-UP - DOWN Counter
+## UP - DOWN Counter
 ```
 module up_down_counter(out, up_down, clk, data, reset);
 output [3;0] out;
@@ -297,7 +473,7 @@ end
 endmodule 
 ```
 
-Adder - Subtractor
+## Adder - Subtractor
 ```
 module adder_subtractor(S, C, V, A, B, Op);
 output [3:0] S;
@@ -323,3 +499,13 @@ Full_Adder f4( A[3], W3, Op, S[3], X3);
 
 endmodule
 ```
+
+
+
+
+
+# Author
+[**Mohammad Mudakir Fazili**](https://www.linkedin.com/in/mudakirfazili14/), *M.Tech Micro-electronics*, NIT Srinagar                                                                                           
+*mudakirfazili@gmail.com*
+
+
