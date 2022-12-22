@@ -175,6 +175,71 @@ module fa1b(sum,cout,a,b,cin);
 endmodule
 ```
 
+3-bit Full Adder (using half adder)
+```
+module fa_ha_3(output [2:0]sum,output cout,input [2:0]a,b,input cin);
+	wire [0:10]t;
+	ha a1(sum[0],t[0],cin,t[8]);
+	ha a2(t[8],t[1],a[0],b[0]);
+	or o1(t[2],t[0],t[1]);
+	ha a3(sum[1],t[3],t[2],t[9]);
+	ha a4(t[9],t[4],a[1],b[1]);
+	or o2(t[5],t[3],t[4]);
+	ha a5(sum[2],t[6],t[5],t[10]);
+	ha a6(t[10],t[7],a[2],b[2]);
+	or o3(cout,t[6],t[7]);
+endmodule
+```
+
+3-bit Full Adder (Testbench)
+```
+module fa3_1tst();
+	reg clk,cin;
+	reg [0:2]a,b;
+	wire cout;
+	wire [0:2]sum;
+	integer count;
+	fa_ha_3 aint(sum,cout,a,b,cin);
+	initial 
+		clk=1;
+	initial
+		count=0;
+	always 
+		#5 clk=~clk;
+	always @(posedge clk)
+	begin
+		count=count+1;
+	end
+	always @(posedge clk)
+	begin
+		{cin,a,b}=count;
+	end
+endmodule
+```
+
+8-bit Full Adder (using 2-bit Full Adder)
+```
+module fa8_1(output [7:0]sum, output cout, input [7:0]a,b, input cin);
+	wire [0:6]temp;
+	fa2_1 f0(sum[0],temp[0],a[0],b[0],cin);
+	fa2_1 f1(sum[1],temp[1],a[1],b[1],temp[0]);
+	fa2_1 f2(sum[2],temp[2],a[2],b[2],temp[1]);
+	fa2_1 f3(sum[3],temp[3],a[3],b[3],temp[2]);
+	fa2_1 f4(sum[4],temp[4],a[4],b[4],temp[3]);
+	fa2_1 f5(sum[5],temp[5],a[5],b[5],temp[4]);
+	fa2_1 f6(sum[6],temp[6],a[6],b[6],temp[5]);
+	fa2_1 f7(sum[7],cout,a[7],b[7],temp[6]);
+endmodule 
+```
+
+
+
+
+
+
+
+
+
 
 
 
