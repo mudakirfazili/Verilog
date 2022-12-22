@@ -1,5 +1,76 @@
 # Verilog
 
+NOT Gate
+```
+module noot(y,a);
+	input a;
+	output y;
+	assign y = ~a;
+endmodule
+```
+
+NOT Gate (Behavioral)
+```
+module notb(y,ybar);
+	input y;
+	output reg ybar;
+	always begin
+		#5 ybar = ~y;
+	end
+endmodule
+```
+
+OR Gate
+```
+module orr(y,a,b);
+	input a,b;
+	output y;
+	assign y=a|b;
+endmodule
+```
+
+OR Gate Testbench
+```
+module orr_tst_bch();
+	wire y;
+	reg a,b,c;
+	initial begin 
+		#5 {a,b,c} =  0;
+		#5 {a,b,c} =  1;
+		#5 {a,b,c} =  2;
+		#5 {a,b,c} =  3;
+		#5 {a,b,c} =  4;
+		#5 {a,b,c} =  5;
+		#5 {a,b,c} =  6;
+		#5 {a,b,c} =  7;
+	end
+	mux2_1 tst(y,a,b,c);
+endmodule
+```
+
+4-bit XOR
+```
+module par(y,i);
+	input [3:0]i;
+	output y;
+	xor (y,i[0],i[1],i[2],i[3]);
+	endmodule
+```
+
+
+ ```
+ 
+ ```
+
+
+
+
+
+
+
+
+
+
 
 
 
