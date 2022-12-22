@@ -100,17 +100,80 @@ module par(y,i);
 	endmodule
 ```
 
+Half Adder
+```
+module ha(sum,cout,a,b);
+	input a,b;
+	output sum,cout;
+	assign sum=a^b;
+	assign cout=a&b;
+endmodule
+```
 
- ```
- 
- ```
+Half Adder
+```
+module ha(sum,cout,a,b);
+	input a,b;
+	output sum,cout;
+	xor (sum,a,b);
+	and (cout,a,b);
+endmodule
+```
 
+Half Adder (Using NAND)
+```
+module half_adder_nand(sum,cout,a,b);
+	input a,b;
+	output sum,cout;
+	wire t1,t2,t3,t4;
+	nand a1(t1,a,b);
+	nand a2(t2,t1,a);
+	nand a3(t3,t1,b);
+	nand a4(sum,t2,t3);
+	nand a5(t4,a,b);
+	nand a6(cout,t4,t4);
+endmodule 
+```
 
+Half Adder
+```
+module hacata(sum,cout,a,b);
+	output wire sum,cout;
+	input a,b;
+	assign sum = {a+b};
+	assign cout = {a*b};
+endmodule
+```
 
+Full Adder
+```
+module fa2_1(sum,cout,a,b,cin);
+	input a,b,cin;
+	output sum,cout;
+	wire [0:2]t;
+	xor x1(t[0],a,b);
+	xor x2(sum,t[0],cin);
+	and a1(t[1],t[0],cin);
+	and a2(t[2],a,b);
+	or a3(cout,t[1],t[2]);
+endmodule 
+```
 
-
-
-
+Full Adder (Behavioral)
+```
+module fa1b(sum,cout,a,b,cin);
+	input a,b,cin;
+	output reg cout,sum;
+	reg t1,t2,t3;
+	always begin @(a,b,cin)
+		t1=a^b;
+		sum=t1^cin;
+		t2=cin&t1;
+		t3=a&b;
+		cout=t2|t3;
+	end 
+endmodule
+```
 
 
 
