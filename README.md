@@ -20,6 +20,31 @@ module notb(y,ybar);
 endmodule
 ```
 
+NOT Gate (LUT)
+```
+primitive not_1(y,a);
+	input a;
+	output y;
+	table //a	:	y 
+		0	:	1 ;
+		1	:	0 ;
+	endtable 
+endprimitive 
+```
+
+NOT Gate (Testbench)
+```
+module noot_tst_bch();
+	wire y;
+	reg a;
+	initial begin 
+		#10 {a}= 'b 0 ;
+		#10 {a}= 'b 1 ;
+	end 
+	noot a1(y,a);
+endmodule 
+```
+
 OR Gate
 ```
 module orr(y,a,b);
@@ -45,6 +70,24 @@ module orr_tst_bch();
 		#5 {a,b,c} =  7;
 	end
 	mux2_1 tst(y,a,b,c);
+endmodule
+```
+
+AND Gate
+```
+module andd(output y,input a,b);
+	assign y=a^b;
+endmodule
+```
+
+NOR Gate
+```
+module norb(y,a,b);
+	input a,b;
+	output reg y; 
+	always begin
+		#1 y = ~(a|b);
+	end
 endmodule
 ```
 
