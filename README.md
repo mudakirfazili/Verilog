@@ -1,5 +1,7 @@
 # Verilog
 
+Simulated results can be found in the images folder in this repo.
+
 ## NOT Gate
 ```
 module noot(y,a);
