@@ -685,9 +685,137 @@ Full_Adder f4( A[3], W3, Op, S[3], X3);
 endmodule
 ```
 
+## Blocking statement (example)
+```
+module blocking();
+	integer clr;
+	initial 
+		begin
+		clr <= #5 0;
+		clr <= #4 1;
+		clr <= #10 0;
+		end
+endmodule
+```
 
+## Function (example)
+```
+module fxnn(yout1,yout2,in1,in2);
+	output reg [1:0]yout1,yout2;
+	input [1:0]in1,in2;
+	reg [1:0]temp1,temp2;
+	always @(in1,in2)
+	begin
+	yout1 = annd(in1,in2);
+	yout2 = orr(in1,in2);
+	end
+function annd(input [1:0]a,b);
+	reg [1:0]ans;
+	begin
+		ans = a & b;
+	annd = ans;
+	end
+endfunction
+function orr(input [1:0]a,b);
+	reg[1:0]ans2;
+	begin
+		ans2 = a | b;
+	orr = ans2;
+	end
+endfunction
+endmodule
+```
 
+## Task and Function(example)
+```
+module and_or(yout1,yout2,in1,in2);
+	output [1:0]yout1,yout2;
+	input [1:0]in1,in2;
+	reg [1:0]temp1,temp2;
+	always @(in1,in2)
+	my_task(temp1,temp2,in1,in2);
+	assign yout1=temp1;
+	assign yout2= temp2;
+	task my_task(output [1:0]or1,and1,input [3:0]a_in,b_in);
+	begin 
+		or1= a_in | b_in ;
+		and1 = a_in & b_in;
+	end
+	endtask
+endmodule
+```
 
+## Parallel to Sequence
+```
+module para_seque();
+	integer dry,cun,jab,exe,dop,gos,pas,box,zoom,bax;
+	always 
+	begin :seq_a
+		#4 dry = 5;
+	fork :parallel_a
+		#6 cun = 7;
+		begin:seq_b
+			exe = box;
+			#5 jab = exe;
+		end
+		#2 dop = 3;
+		#4 gos = 2;
+		#89 pas = 4;
+	join
+	#8 bax = 1;
+	#2 zoom = 52;
+	end
+endmodule
+```
+
+## 3 bit state machine
+```
+module ctr(clk,rst,y);
+	input clk,rst;
+	output [3:0]y;
+	reg [3:0]ps,ns;
+	parameter s0=3'd0,s1=3'd1,s2=3'd2,s3=3'd3,s4=3'd4,s5=3'd5,s6=3'd6,s7=3'd7;
+	always @(posedge clk ,posedge rst)
+		if (rst)
+			begin
+				ps = s0;
+				ns = s0;
+			end
+		else
+			case(ps)
+			s0 : ns = s1;
+			s1 : ns = s2;
+			s2 : ns = s3;
+			s3 : ns = s4;
+			s4 : ns = s5;
+			s5 : ns = s6;
+			s6 : ns = s7;
+			default : ns = s0;
+			endcase
+		always @(ns)
+		ps = ns;
+	assign y = ps;
+endmodule
+```
+
+## 1024x8 Memory
+```
+module memorydes(addr,din,dout,rd,wr,en,clk);
+	input [7:0]din;
+	input [9:0]addr;
+	input rd,wr,en,clk;
+	output reg [7:0]dout;
+	reg [7:0] mem [1023:0];
+	always @ (posedge clk ,posedge en)
+	if (en)
+		if(rd)
+		dout = mem[addr];
+	always @(negedge clk , posedge en)
+	if (en)
+		if (wr)
+		mem[addr] = din;
+endmodule 
+```
 
 # Author
 [**Mohammad Mudakir Fazili**](https://www.linkedin.com/in/mudakirfazili14/), *M.Tech Micro-electronics*, NIT Srinagar                                                                                           
