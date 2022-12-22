@@ -372,6 +372,23 @@ module pe4_1(y,i);
 endmodule
 ```
 
+## Priority Encoder
+```
+module pe_if(y,i);
+	input [3:0]i;
+	output reg [1:0]y;
+	always @(i)
+		if (i[0] == 1)
+			y = 2'b00;
+		else if (i[1] == 1)
+			y = 2'b01;
+		else if (i[2] == 1)
+			y = 2'b10;
+		else if (i[3] == 1)
+			y = 2'b11;
+endmodule 
+```
+
 ## 8:3 Priority Encoder
 ```
 module prio_enco(i,y);
@@ -411,15 +428,183 @@ module par_gen(y,i);
 	end
 endmodule
 ```
-## 
-## 
-## 
-## 
-## 
-## 
-## 
-## 
+## D flip flop
+```
+module ffll(q,qbar,rst,clk,d);
+	input d,clk,rst;
+	output reg q,qbar;
+	always @(posedge (clk), posedge(rst))
+		begin  if (rst == 1 )
+			q = 0;
+		else if (d == 0)
+			q = 0;
+		else if (d ==1)
+			q = 1;
+		 qbar = ~q;
+		end
+		
+endmodule
+```
 
+## JK flip flop
+```
+module jkfftest(q,qbar,j,k);
+	input j,k;
+	output reg q,qbar;
+	initial begin 
+		q = 0;
+		qbar=~q;
+	end
+	always begin
+		#10 q=(j&(~q))|(~k&q);
+		#10 qbar =~q;
+	end
+endmodule 
+```
+
+## JK flip flop (else-if)
+```
+module jkflip(j,k,clk,rst,q,qbar);
+	input j,k,rst,clk;
+	output q,qbar;
+	reg temp;
+	initial
+		temp = 1'b0;
+	always @(posedge clk ,posedge rst)
+	begin	if (rst == 1'b0)
+			temp = 1'b0;
+		else if (j==0 & k==0)
+			temp = temp;
+		else if (j==0 & k==1)
+			temp = 1'b0;
+		else if (j==1 & k==0)
+			temp = 1'b1;
+		else if (j==1 & k==1)
+			temp = ~temp;
+	end
+	assign q = temp;
+	assign qbar = ~temp;
+endmodule 
+```
+
+## Master Slave JK
+```
+module masterslave_jk(q,p,j,k,clk);
+	input j,k,clk;
+	inout p,q;
+	wire t1,t2,t3;
+	jk_ff a(t1,t2,j,k,clk);
+	not c(t3,clk);
+	jk_ff b(q,p,t1,t2,t3);
+endmodule
+```
+
+## UP counter
+```
+module up_counter(clk,q,rst);
+	input clk,rst;
+	output [3:0]q;
+	reg [3:0] count;
+	initial
+		count = 0; 
+	always @(negedge clk , posedge rst)
+		begin
+		if (rst == 1'b1)
+			count = 1'b0;
+		else 
+			count = count + 1;
+		end
+		assign q = count;
+		
+endmodule
+```
+
+## Shift register
+```
+module shift_reg(output [0:3]out,input [0:3]in);
+	assign #5 out = in>>2;
+	assign #5 out = in<<2;
+endmodule
+```
+
+## Up counter (with load and pause)
+```
+module load_pause(load,pause,data,clk,q,rst);
+	input clk,rst,load ,pause;
+	input [3:0]data;
+	output[3:0]q;
+	reg [3:0] count;
+	initial
+		count = 0; 
+	always @(posedge clk , posedge rst)
+		begin
+		if (rst == 1'b1)
+			count = 1'b0;
+		else if (load == 1'b1)
+			count = data; 
+		else if (pause == 1)
+			count = count;
+		else 
+			count = count + 1;
+		end
+		assign q = count;
+		
+endmodule
+```
+## 8 bit multiplier
+```
+module em(res,inta,intb);
+	parameter size = 8;
+	input [size : 1]inta,intb;
+	output [2*size : 1]res;
+	reg [2*size : 1]temp_res,shift_a,shift_b;
+	always @(*)
+	begin 
+		shift_a=inta;
+		shift_b=intb;
+		temp_res=0;
+	repeat(size)
+		begin
+		if (shift_b[1])
+			temp_res = temp_res + shift_a;
+			shift_a = shift_a << 1;
+			shift_b = shift_b >> 1;
+		end
+	end
+	assign res = temp_res;
+endmodule
+```
+
+## Frequency Divider
+```
+module fdc(clk,q2,q4,q8,rst);
+	input clk ,rst ;
+	output q2,q4,q8;
+	reg temp2,temp4,temp8;
+	initial begin
+		temp2 = 0;
+		temp4 = 0;
+		temp8 = 0;
+	end
+	assign q2 = temp2;
+	assign q4 = temp4;
+	assign q8 = temp8;
+	always @(posedge clk,posedge rst)
+	begin 
+		if (rst == 1'b1)
+			 temp2 = 1'b0;
+		else 
+		 temp2 = ~temp2;
+	end 
+	
+	always @(posedge q2)
+		temp4 = ~temp4;
+	always @(posedge q4)
+		temp8 = ~temp8;
+		
+
+endmodule
+```
 
 ## 16:1 MUX
 ```
